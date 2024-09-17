@@ -7,7 +7,7 @@ from odoo import api, fields, models
 
 class EcotaxLineMixin(models.AbstractModel):
     """Mixin class for objects which can be used to save
-     multi ecotax calssification  by account move line
+     multi ecotax classification  by account move line
     or sale order line."""
 
     _name = "ecotax.line.mixin"
@@ -27,7 +27,7 @@ class EcotaxLineMixin(models.AbstractModel):
     )
     force_amount_unit = fields.Float(
         digits="Ecotax",
-        help="Force ecotax.\n" "Allow to subtite default Ecotax Classification\n",
+        help="Force ecotax.\n" "Allow to add a subtitle to the default Ecotax Classification",
     )
     amount_total = fields.Float(
         digits="Ecotax",
@@ -47,13 +47,13 @@ class EcotaxLineMixin(models.AbstractModel):
         for ecotaxline in self:
             ecotax_cls = ecotaxline.classification_id
 
-            if ecotax_cls.ecotax_type == "weight_based":
+            if ecotaxline.force_amount_unit:
+                # force ecotax amount
+                amt = ecotaxline.force_amount_unit
+            elif ecotax_cls.ecotax_type == "weight_based":
                 amt = ecotax_cls.ecotax_coef * (ecotaxline.product_id.weight or 0.0)
             else:
                 amt = ecotax_cls.default_fixed_ecotax
-            # force ecotax amount
-            if ecotaxline.force_amount_unit:
-                amt = ecotaxline.force_amount_unit
 
             ecotaxline.amount_unit = amt
             ecotaxline.amount_total = ecotaxline.amount_unit * ecotaxline.quantity
