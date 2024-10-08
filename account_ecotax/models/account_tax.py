@@ -71,6 +71,7 @@ result = (product.fixed_ecotax or 0.0) * quantity
                 "formatted_tax_group_base_amount": fmt_base_amt,
                 "tax_group_id": False,  # Not an actual tax
                 "group_key": "Included Ecotax",
+                "hide_base_amount": True
             }
         )
         res["groups_by_subtotal"][_("Untaxed Amount")] = data
